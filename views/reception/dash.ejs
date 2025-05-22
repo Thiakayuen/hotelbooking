@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/dash.css" />
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <%- include("../_header.ejs") %>
+    <h1>Receptionist Dashboard</h1>
+    <h2>Receptionist Dashboard</h2>
+
+    <section class="bookings">
+      <h2>Recent Bookings(Past 5 days)</h2>
+
+      <div class="dash-stats">
+        <!-- divs for bookings, room bookings, spot bookings, current checkins -->
+        <div class="dash-stat">
+          <h3>Total Bookings</h3>
+          <p><%= spotbookings.length + roombookings.length %></p>
+        </div>
+
+        <div class="dash-stat">
+          <h3>Room Bookings</h3>
+          <p><%= roombookings.length %></p>
+        </div>
+
+        <div class="dash-stat">
+          <h3>Spot Bookings</h3>
+          <p><%= spotbookings.length %></p>
+        </div>
+
+        <div class="dash-stat">
+          <h3>Current Checkins</h3>
+          <p><%= totalCheckins %></p>
+        </div>
+      </div>
+
+      <!-- Recent table booking -->
+      <h3>Spots</h3>
+      <table class="spot-booking-table">
+        <tr>
+          <th>Booking ID</th>
+          <th>Client Name</th>
+          <th>Spot Name</th>
+          <th>Booking Date</th>
+          <th>Booking Status</th>
+          <th>Payment Status</th>
+          <th>Action</th>
+        </tr>
+        <% spotbookings.reverse().forEach(booking=>{ %>
+        <tr>
+          <td><%= booking.full_name %></td>
+          <td><%= booking.spot %></td>
+          <td><%= booking.checkin_datetime.toDateString() %></td>
+          <td><%= booking.booking_status %></td>
+          <td><%= booking.amount_paid? "PAID" : "NOT PAID" %></td>
+          <td>
+            <a href="/confirmspotcheckin/<%= booking.id %>">Check In</a>
+            |
+            <a href="/confirmspotcheckout/<%= booking.id %>">Check Out</a>
+          </td>
+        </tr>
+        <% }) %>
+      </table>
+      <h3>Rooms</h3>
+      <table class="room-bookings-table">
+        <tr>
+          <th>Booking ID</th>
+          <th>Client Name</th>
+          <th>Room ID</th>
+          <th>Booking Date</th>
+          <th>Booking Status</th>
+          <th>Payment Status</th>
+          <th>Actions</th>
+        </tr>
+
+        <% roombookings.reverse().forEach(booking=>{ %>
+        <tr>
+          <td><%= booking.full_name %></td>
+          <td><%= booking.room %></td>
+          <td><%= booking.checkin_date.toDateString() %></td>
+          <td><%= booking.booking_status %></td>
+          <td><%= booking.amount_paid? "PAID" : "NOT PAID" %></td>
+          <td>
+            <a
+              href="/confirmroomcheckin?id=<%= booking.id %>$client=<%=booking.client%>"
+              style="color: green"
+              >Check In</a
+            >
+            |
+            <a
+              href="/confirmroomcheckout?id=<%= booking.id %>$client=<%=booking.client%>"
+              style="color: green"
+              >Check Out</a
+            >
+          </td>
+        </tr>
+        <% }) %>
+      </table>
+    </section>
+
+    <!-- 
+        Receptionist Dashboard
+        -- View bookings and their status upto to one week
+        -- View booking payment status
+        -- confirm checkin and checkout
+        -- View all clients and their detail
+        -- View all rooms and their status
+        -- View all spots and their status
+    -->
+  </body>
+</html>
